@@ -299,6 +299,156 @@ def get_agentic_graph():
         _agentic_graph = build_agentic_graph()
     return _agentic_graph
 
+
+def _run_workforce_check_impl(employee_id: int, user_role: str = "hr_admin") -> Dict[str, Any]:
+    """Execute the governed workforce-check workflow and return a structured trace."""
+    logger = None
+    try:
+        from app.utils.logging_config import get_logger
+
+        logger = get_logger()
+        logger.info("Workforce check requested for employee_id=%s by user_role=%s", employee_id, user_role)
+
+        from app.services.agentic_service import (
+            get_employee_profile,
+            get_skills,
+            calculate_skill_gap,
+            recommend_courses,
+            generate_learning_plan,
+            ToolAuthorizer,
+        )
+
+        trace = []
+
+        # Step 1: get_employee_profile
+        step_1 = {
+            "step": 1,
+            "tool": "get_employee_profile",
+            "inputs": {"employee_id": employee_id, "user_role": user_role},
+            "status": "pending",
+        }
+        if ToolAuthorizer.authorize("get_employee_profile", user_role):
+            try:
+                result = get_employee_profile.invoke({"employee_id": employee_id, "user_role": user_role})
+                step_1["output"] = result
+                step_1["status"] = "success"
+            except Exception as e:
+                step_1["status"] = "error"
+                step_1["error"] = str(e)
+        else:
+            step_1["status"] = "blocked"
+            step_1["blocked_reason"] = (
+                f"User role '{user_role}' is not authorized to use tool 'get_employee_profile'"
+            )
+        trace.append(step_1)
+
+        # Step 2: get_skills
+        step_2 = {
+            "step": 2,
+            "tool": "get_skills",
+            "inputs": {"employee_id": employee_id, "user_role": user_role},
+            "status": "pending",
+        }
+        if ToolAuthorizer.authorize("get_skills", user_role):
+            try:
+                result = get_skills.invoke({"employee_id": employee_id, "user_role": user_role})
+                step_2["output"] = result
+                step_2["status"] = "success"
+            except Exception as e:
+                step_2["status"] = "error"
+                step_2["error"] = str(e)
+        else:
+            step_2["status"] = "blocked"
+            step_2["blocked_reason"] = f"User role '{user_role}' is not authorized to use tool 'get_skills'"
+        trace.append(step_2)
+
+        # Step 3: calculate_skill_gap
+        step_3 = {
+            "step": 3,
+            "tool": "calculate_skill_gap",
+            "inputs": {"employee_id": employee_id, "user_role": user_role},
+            "status": "pending",
+        }
+        if ToolAuthorizer.authorize("calculate_skill_gap", user_role):
+            try:
+                result = calculate_skill_gap.invoke({"employee_id": employee_id, "user_role": user_role})
+                step_3["output"] = result
+                step_3["status"] = "success"
+            except Exception as e:
+                step_3["status"] = "error"
+                step_3["error"] = str(e)
+        else:
+            step_3["status"] = "blocked"
+            step_3["blocked_reason"] = (
+                f"User role '{user_role}' is not authorized to use tool 'calculate_skill_gap'"
+            )
+        trace.append(step_3)
+
+        # Step 4: recommend_courses
+        step_4 = {
+            "step": 4,
+            "tool": "recommend_courses",
+            "inputs": {"employee_id": employee_id, "user_role": user_role},
+            "status": "pending",
+        }
+        if ToolAuthorizer.authorize("recommend_courses", user_role):
+            try:
+                result = recommend_courses.invoke({"employee_id": employee_id, "user_role": user_role})
+                step_4["output"] = result
+                step_4["status"] = "success"
+            except Exception as e:
+                step_4["status"] = "error"
+                step_4["error"] = str(e)
+        else:
+            step_4["status"] = "blocked"
+            step_4["blocked_reason"] = (
+                f"User role '{user_role}' is not authorized to use tool 'recommend_courses'"
+            )
+        trace.append(step_4)
+
+        # Step 5: generate_learning_plan
+        step_5 = {
+            "step": 5,
+            "tool": "generate_learning_plan",
+            "inputs": {"employee_id": employee_id, "user_role": user_role},
+            "status": "pending",
+        }
+        if ToolAuthorizer.authorize("generate_learning_plan", user_role):
+            try:
+                result = generate_learning_plan.invoke({"employee_id": employee_id, "user_role": user_role})
+                step_5["output"] = result
+                step_5["status"] = "success"
+            except Exception as e:
+                step_5["status"] = "error"
+                step_5["error"] = str(e)
+        else:
+            step_5["status"] = "blocked"
+            step_5["blocked_reason"] = (
+                f"User role '{user_role}' is not authorized to use tool 'generate_learning_plan'"
+            )
+        trace.append(step_5)
+
+        return {
+            "employee_id": employee_id,
+            "user_role": user_role,
+            "trace": trace,
+            "summary": {
+                "total_steps": 5,
+                "successful_steps": len([s for s in trace if s["status"] == "success"]),
+                "blocked_steps": len([s for s in trace if s["status"] == "blocked"]),
+                "error_steps": len([s for s in trace if s["status"] == "error"]),
+            },
+        }
+    except Exception as e:
+        if logger is not None:
+            logger.exception("Workforce check failed")
+        raise
+
+
+def run_workforce_check(employee_id: int, user_role: str = "hr_admin") -> Dict[str, Any]:
+    """Backward-compatible helper used by the Streamlit frontend."""
+    return _run_workforce_check_impl(employee_id, user_role)
+
 def run_agentic_workflow(employee_id: int, query: str, user_role: str = "hr_admin") -> Dict[str, Any]:
     """
     Run the agentic workflow for an employee query.

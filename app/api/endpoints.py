@@ -111,8 +111,7 @@ def ask_rag_question(request: RAGQueryRequest):
     logger.info("RAG query received: %s", request.query)
     
     try:
-        rag = rag_service.get_rag_service()
-        result = rag.ask(request.query, top_k=request.top_k)
+        result = rag_service.ask_question(request.query, top_k=request.top_k)
         return result
     except Exception as e:
         logger.exception("RAG query failed")
@@ -132,146 +131,8 @@ def run_workforce_check(request: AgentWorkflowRequest):
     Returns a structured trace with each step's tool name, inputs, and output.
     Respects ToolAuthorizer permissions - blocked steps are reported clearly.
     """
-    logger = get_logger()
-    logger.info("Workforce check requested for employee_id=%s by user_role=%s", request.employee_id, request.user_role)
-    
     try:
-        # Import tools directly to run them sequentially
-        from app.services.agentic_service import (
-            get_employee_profile,
-            get_skills,
-            calculate_skill_gap,
-            recommend_courses,
-            generate_learning_plan,
-            ToolAuthorizer
-        )
-        
-        trace = []
-        employee_id = request.employee_id
-        user_role = request.user_role
-        
-        # Step 1: get_employee_profile
-        step_1 = {
-            "step": 1,
-            "tool": "get_employee_profile",
-            "inputs": {"employee_id": employee_id, "user_role": user_role},
-            "status": "pending"
-        }
-        
-        if ToolAuthorizer.authorize("get_employee_profile", user_role):
-            try:
-                result = get_employee_profile.invoke({"employee_id": employee_id, "user_role": user_role})
-                step_1["output"] = result
-                step_1["status"] = "success"
-            except Exception as e:
-                step_1["status"] = "error"
-                step_1["error"] = str(e)
-        else:
-            step_1["status"] = "blocked"
-            step_1["blocked_reason"] = f"User role '{user_role}' is not authorized to use tool 'get_employee_profile'"
-        
-        trace.append(step_1)
-        
-        # Step 2: get_skills
-        step_2 = {
-            "step": 2,
-            "tool": "get_skills",
-            "inputs": {"employee_id": employee_id, "user_role": user_role},
-            "status": "pending"
-        }
-        
-        if ToolAuthorizer.authorize("get_skills", user_role):
-            try:
-                result = get_skills.invoke({"employee_id": employee_id, "user_role": user_role})
-                step_2["output"] = result
-                step_2["status"] = "success"
-            except Exception as e:
-                step_2["status"] = "error"
-                step_2["error"] = str(e)
-        else:
-            step_2["status"] = "blocked"
-            step_2["blocked_reason"] = f"User role '{user_role}' is not authorized to use tool 'get_skills'"
-        
-        trace.append(step_2)
-        
-        # Step 3: calculate_skill_gap
-        step_3 = {
-            "step": 3,
-            "tool": "calculate_skill_gap",
-            "inputs": {"employee_id": employee_id, "user_role": user_role},
-            "status": "pending"
-        }
-        
-        if ToolAuthorizer.authorize("calculate_skill_gap", user_role):
-            try:
-                result = calculate_skill_gap.invoke({"employee_id": employee_id, "user_role": user_role})
-                step_3["output"] = result
-                step_3["status"] = "success"
-            except Exception as e:
-                step_3["status"] = "error"
-                step_3["error"] = str(e)
-        else:
-            step_3["status"] = "blocked"
-            step_3["blocked_reason"] = f"User role '{user_role}' is not authorized to use tool 'calculate_skill_gap'"
-        
-        trace.append(step_3)
-        
-        # Step 4: recommend_courses
-        step_4 = {
-            "step": 4,
-            "tool": "recommend_courses",
-            "inputs": {"employee_id": employee_id, "user_role": user_role},
-            "status": "pending"
-        }
-        
-        if ToolAuthorizer.authorize("recommend_courses", user_role):
-            try:
-                result = recommend_courses.invoke({"employee_id": employee_id, "user_role": user_role})
-                step_4["output"] = result
-                step_4["status"] = "success"
-            except Exception as e:
-                step_4["status"] = "error"
-                step_4["error"] = str(e)
-        else:
-            step_4["status"] = "blocked"
-            step_4["blocked_reason"] = f"User role '{user_role}' is not authorized to use tool 'recommend_courses'"
-        
-        trace.append(step_4)
-        
-        # Step 5: generate_learning_plan
-        step_5 = {
-            "step": 5,
-            "tool": "generate_learning_plan",
-            "inputs": {"employee_id": employee_id, "user_role": user_role},
-            "status": "pending"
-        }
-        
-        if ToolAuthorizer.authorize("generate_learning_plan", user_role):
-            try:
-                result = generate_learning_plan.invoke({"employee_id": employee_id, "user_role": user_role})
-                step_5["output"] = result
-                step_5["status"] = "success"
-            except Exception as e:
-                step_5["status"] = "error"
-                step_5["error"] = str(e)
-        else:
-            step_5["status"] = "blocked"
-            step_5["blocked_reason"] = f"User role '{user_role}' is not authorized to use tool 'generate_learning_plan'"
-        
-        trace.append(step_5)
-        
-        return {
-            "employee_id": employee_id,
-            "user_role": user_role,
-            "trace": trace,
-            "summary": {
-                "total_steps": 5,
-                "successful_steps": len([s for s in trace if s["status"] == "success"]),
-                "blocked_steps": len([s for s in trace if s["status"] == "blocked"]),
-                "error_steps": len([s for s in trace if s["status"] == "error"])
-            }
-        }
-        
+        return agentic_service.run_workforce_check(request.employee_id, request.user_role)
     except Exception as e:
         logger.exception("Workforce check failed")
         raise HTTPException(status_code=500, detail=str(e))

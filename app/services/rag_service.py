@@ -313,3 +313,8 @@ def get_rag_service() -> RAGService:
     if _rag_service is None:
         _rag_service = RAGService()
     return _rag_service
+
+
+def ask_question(query: str, top_k: int = 5) -> Dict[str, Any]:
+    """Backward-compatible helper used by the Streamlit frontend."""
+    return get_rag_service().ask(query, top_k=top_k)
