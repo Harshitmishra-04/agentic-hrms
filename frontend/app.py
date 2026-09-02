@@ -1,122 +1,60 @@
 import os
-import subprocess
-import time
-import httpx
-import signal
+import sys
 
 import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-# Start FastAPI backend in background process if not already running
-_backend_process = None
-_backend_started = False
+# Add project root to path for direct imports
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
-def start_backend():
-    """Start the FastAPI backend using uvicorn in a background subprocess."""
-    import sys
-    
-    # Add the project root to the Python path so the backend can be imported
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    
-    try:
-        # Start uvicorn as a subprocess
-        cmd = [sys.executable, "-m", "uvicorn", "app.main:app", 
-               "--host", "127.0.0.1", "--port", "8000", "--log-level", "info"]
-        
-        process = subprocess.Popen(
-            cmd,
-            cwd=project_root,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-        
-        return process
-    except Exception as e:
-        print(f"Failed to start backend subprocess: {e}")
-        return None
+# Direct imports instead of HTTP calls
+from app.services import attrition_service, engagement_service, recommendation_service, skill_gap_service, rag_service, agentic_service
 
-def ensure_backend_running():
-    """Ensure the FastAPI backend is running, starting it if necessary."""
-    global _backend_process, _backend_started
-    
-    if _backend_started:
-        return
-    
-    # Check if backend is already responding
-    try:
-        response = httpx.get("http://127.0.0.1:8000/", timeout=2.0)
-        if response.status_code == 200:
-            _backend_started = True
-            return
-    except:
-        pass
-    
-    # Start backend in background subprocess
-    if _backend_process is None or _backend_process.poll() is not None:
-        _backend_process = start_backend()
-        if _backend_process:
-            _backend_started = True
-            print(f"Started backend process with PID: {_backend_process.pid}")
-        else:
-            print("Failed to start backend process")
+# Replace HTTP client functions with direct service calls
+def fetch_json(base_url: str, path: str):
+    """Direct function calls instead of HTTP"""
+    # Map API paths to service functions
+    if path == "/dashboard/summary":
+        attr_summary = attrition_service.get_overall_attrition_summary()
+        eng_summary = engagement_service.get_overall_engagement_summary()
+        skills_summary = skill_gap_service.get_org_skill_gaps_summary()
+        avg_skill_gap_count = skill_gap_service.get_org_avg_skill_gap_count()
+        recs_summary = recommendation_service.get_recommendations_summary()
+        return {
+            "attrition": attr_summary,
+            "engagement": eng_summary,
+            "skills": skills_summary,
+            "avg_skill_gap_count": avg_skill_gap_count,
+            "recommendations": recs_summary,
+        }
+    elif path.startswith("/dashboard/attrition-by-department"):
+        return attrition_service.get_attrition_by_department()
+    elif path.startswith("/dashboard/skill-gaps"):
+        limit = int(path.split("=")[1]) if "=" in path else 100
+        return skill_gap_service.get_top_missing_skills(limit=limit)
+    elif path.startswith("/dashboard/recommendations"):
+        return recommendation_service.get_recommendations_summary()
+    return {}
 
-def wait_for_api_ready(max_retries=60, retry_interval=2.0):
-    """Wait for the API to be ready before proceeding."""
-    for attempt in range(max_retries):
-        try:
-            response = httpx.get("http://127.0.0.1:8000/", timeout=5.0)
-            if response.status_code == 200:
-                return True
-        except Exception as e:
-            # Log the error for debugging but continue trying
-            if attempt % 10 == 0:  # Log every 10 attempts to avoid spam
-                print(f"Attempt {attempt + 1}/{max_retries}: Backend not ready yet - {e}")
-        time.sleep(retry_interval)
-    return False
+def fetch_employee(base_url: str, employee_id: int):
+    """Direct employee lookup instead of HTTP"""
+    return attrition_service.get_employee_intelligence(employee_id)
 
-# Start backend on first script run
-if "backend_started" not in st.session_state:
-    ensure_backend_running()
-    st.session_state.backend_started = True
+def post_json(base_url: str, path: str, payload: dict):
+    """Direct service calls instead of HTTP"""
+    if path == "/rag/ask":
+        return rag_service.ask_question(payload.get("query"), payload.get("top_k", 3))
+    elif path == "/agent/workforce-check":
+        return agentic_service.run_workforce_check(payload.get("employee_id"), payload.get("user_role"))
+    return {}
 
-# Cleanup function to kill backend process on exit
-def cleanup_backend():
-    global _backend_process
-    if _backend_process and _backend_process.poll() is None:
-        try:
-            _backend_process.terminate()
-            _backend_process.wait(timeout=5)
-        except:
-            try:
-                _backend_process.kill()
-            except:
-                pass
-
-# Register cleanup
-import atexit
-atexit.register(cleanup_backend)
-
-# Wait for API to be ready before proceeding
-if "api_ready" not in st.session_state:
-    with st.spinner("Starting FastAPI backend... This may take up to 2 minutes."):
-        if wait_for_api_ready(max_retries=60, retry_interval=2.0):
-            st.session_state.api_ready = True
-        else:
-            st.error("Failed to start FastAPI backend. Please check the logs.")
-            # Cleanup the failed process
-            cleanup_backend()
-            st.stop()
-
-DEFAULT_API_URL = os.getenv("HRMS_API_URL", "http://127.0.0.1:8000")
+# No backend startup needed - everything runs in the same process now
+DEFAULT_API_URL = "direct"  # Flag to indicate direct function calls
 
 
-def _client(base_url: str) -> httpx.Client:
-    return httpx.Client(base_url=base_url.rstrip("/"), timeout=30.0)
-
-
-@st.cache_data(ttl=60, show_spinner=False)
 def fetch_json(base_url: str, path: str):
     with _client(base_url) as client:
         response = client.get(path)
@@ -124,24 +62,19 @@ def fetch_json(base_url: str, path: str):
         return response.json()
 
 
-@st.cache_data(show_spinner=False)
 def fetch_employee(base_url: str, employee_id: int):
-    with _client(base_url) as client:
-        response = client.get(f"/employees/{employee_id}")
-        if response.status_code == 404:
-            return None
-        response.raise_for_status()
-        return response.json()
+    """Direct employee lookup instead of HTTP"""
+    return attrition_service.get_employee_intelligence(employee_id)
 
 
 def post_json(base_url: str, path: str, payload: dict):
-    with _client(base_url) as client:
-        response = client.post(path, json=payload)
-        response.raise_for_status()
-        return response.json()
+    """Direct service calls instead of HTTP"""
+    if path == "/rag/ask":
+        return rag_service.ask_question(payload.get("query"), payload.get("top_k", 3))
+    elif path == "/agent/workforce-check":
+        return agentic_service.run_workforce_check(payload.get("employee_id"), payload.get("user_role"))
+    return {}
 
-
-@st.cache_data(show_spinner=False)
 def onet_basic_skill_names() -> set[str]:
     """O*NET Basic Skills are Element ID 2.A.* in essential_skills.csv.
 
@@ -326,18 +259,16 @@ tab1, tab2, tab3, tab4 = st.tabs(["Dashboard", "Ask HR Policy", "Workforce Intel
 with tab1:
     with st.sidebar:
         st.header("⚙️ Controls")
-        api_url = st.text_input("API base URL", value=DEFAULT_API_URL)
-        st.caption("Start the backend with `uvicorn app.main:app --reload` before loading this page.")
+        st.caption("Backend services run directly in this process (Streamlit Cloud compatible).")
 
     try:
-        summary = fetch_json(api_url, "/dashboard/summary")
-        dept_rows = fetch_json(api_url, "/dashboard/attrition-by-department")
-        skill_payload = fetch_json(api_url, "/dashboard/skill-gaps?limit=100")
-        recs_payload = fetch_json(api_url, "/dashboard/recommendations")
-    except httpx.HTTPError as exc:
+        summary = fetch_json(DEFAULT_API_URL, "/dashboard/summary")
+        dept_rows = fetch_json(DEFAULT_API_URL, "/dashboard/attrition-by-department")
+        skill_payload = fetch_json(DEFAULT_API_URL, "/dashboard/skill-gaps?limit=100")
+        recs_payload = fetch_json(DEFAULT_API_URL, "/dashboard/recommendations")
+    except Exception as exc:
         st.error(
-            f"Could not reach the FastAPI backend at `{api_url}`. "
-            "Start it from the project root, then refresh this page."
+            f"Error loading dashboard data: {exc}"
         )
         st.code(str(exc))
         st.stop()
@@ -520,8 +451,8 @@ with tab1:
 
         if load_profile:
             try:
-                record = fetch_employee(api_url, int(employee_id))
-            except httpx.HTTPError as exc:
+                record = fetch_employee(DEFAULT_API_URL, int(employee_id))
+            except Exception as exc:
                 st.error(f"Employee lookup failed: {exc}")
                 record = None
 
@@ -736,7 +667,7 @@ with tab2:
         else:
             try:
                 with st.spinner("🔍 Retrieving policies... This may take a few seconds."):
-                    result = post_json(api_url, "/rag/ask", {"query": rag_query, "top_k": top_k})
+                    result = post_json(DEFAULT_API_URL, "/rag/ask", {"query": rag_query, "top_k": top_k})
                 
                 st.subheader("Answer")
                 answer = result.get("answer", "No answer generated.")
@@ -788,7 +719,7 @@ with tab2:
                 else:
                     st.info("No sources retrieved.")
                     
-            except httpx.HTTPError as exc:
+            except Exception as exc:
                 st.error(f"RAG query failed: {exc}")
 
 with tab4:
@@ -875,7 +806,7 @@ with tab3:
     
     if st.button("Run Workforce Check", type="primary"):
         try:
-            result = post_json(api_url, "/agent/workforce-check", {
+            result = post_json(DEFAULT_API_URL, "/agent/workforce-check", {
                 "employee_id": agent_employee_id,
                 "user_role": agent_user_role
             })
@@ -960,5 +891,5 @@ with tab3:
                     else:
                         st.info(f"Status: {step_status}")
                         
-        except httpx.HTTPError as exc:
+        except Exception as exc:
             st.error(f"Agent workflow failed: {exc}")

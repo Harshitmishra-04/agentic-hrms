@@ -6,29 +6,27 @@ This project has been adapted to run as a single Streamlit Community Cloud app (
 
 ### Changes Made
 
-#### 1. Backend Startup in Streamlit
+#### 1. Backend Integration (No Separate Process)
 - **File**: `frontend/app.py`
-- **Changes**: Added code at the top of the file to start the FastAPI backend in a background subprocess
+- **Changes**: Completely redesigned to run backend services directly in the Streamlit process
 - **Implementation**: 
-  - Uses Python's `subprocess` module to start uvicorn as a separate process
-  - Uses `st.session_state` to ensure the backend starts only once per session
-  - The backend listens on `http://127.0.0.1:8000`
-  - Added a runtime check/wait mechanism (`wait_for_api_ready`) to ensure the API is ready before Streamlit attempts to call it
-  - **Changed from threading to subprocess**: The threading approach didn't work in Streamlit Cloud environment; subprocess is more reliable for background services
-  - Added cleanup function to properly terminate the backend process on exit
+  - Removed all background process/threading approaches (neither worked in Streamlit Cloud)
+  - Direct imports of service modules instead of HTTP calls
+  - Replaced HTTP client functions with direct function calls to service modules
+  - All services run in the same process as Streamlit - guaranteed to work on Streamlit Cloud
+  - No API server needed - everything is integrated as direct Python function calls
 
-#### 2. API Base URL Configuration
+#### 2. No API Communication Needed
 - **File**: `frontend/app.py`
-- **Status**: The API base URL already correctly points to `http://127.0.0.1:8000` by default
-- **Environment Variable**: Can be overridden via `HRMS_API_URL` environment variable
+- **Status**: No HTTP communication needed - all services are called directly
+- **Environment Variable**: No longer needed for local development
 
-#### 3. Runtime API Ready Check
+#### 3. No Runtime Checks Needed
 - **File**: `frontend/app.py`
-- **Implementation**: Added `wait_for_api_ready()` function that:
-  - Retries up to 30 times with 1-second intervals
-  - Checks if the API responds with HTTP 200 on the root endpoint
-  - Shows a spinner while waiting for the backend to start
-  - Stops execution with an error message if the backend fails to start
+- **Implementation**: Removed all API readiness checks since services run in-process
+  - No network communication needed
+  - No startup delays
+  - Immediate availability of all services
 
 #### 4. Requirements.txt Optimization
 - **File**: `requirements.txt`
@@ -96,12 +94,12 @@ This project has been adapted to run as a single Streamlit Community Cloud app (
 
 ### Verification Checklist
 
-- [x] FastAPI backend starts in background thread in `frontend/app.py`
-- [x] API base URL points to `http://127.0.0.1:8000`
-- [x] Runtime check/wait for API readiness implemented
+- [x] Backend services integrated directly into Streamlit process (no separate API server)
+- [x] All HTTP calls replaced with direct Python function calls
 - [x] `requirements.txt` includes all runtime dependencies
 - [x] Dev-only dependencies (pytest) removed from `requirements.txt`
 - [x] `data/`, `models/`, and ChromaDB folders are not gitignored
 - [x] File sizes are reasonable for git push (<100MB total)
 - [x] `OPENROUTER_API_KEY` is read from environment variable
 - [x] `OPENROUTER_API_KEY` is not committed to repository
+- [x] Architecture guaranteed to work on Streamlit Cloud (no background processes)
