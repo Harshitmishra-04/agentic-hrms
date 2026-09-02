@@ -15,14 +15,23 @@ sys.path.insert(0, project_root)
 # Direct imports instead of HTTP calls
 from app.services import attrition_service, engagement_service, recommendation_service, skill_gap_service, rag_service, agentic_service
 
+
+def _load_local_service(module_name: str):
+    """Load a service from this repository, bypassing any cached package module."""
+    path = os.path.join(project_root, "app", "services", f"{module_name}.py")
+    spec = importlib.util.spec_from_file_location(f"enterprise_hr_{module_name}", path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Unable to load local service: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+recommendation_service = _load_local_service("recommendation_service")
+rag_service = _load_local_service("rag_service")
+
 # Load the agent module by absolute path to avoid a stale/colliding `app` package.
-_agent_spec = importlib.util.spec_from_file_location(
-    "enterprise_hr_agentic_service", os.path.join(project_root, "app", "services", "agentic_service.py")
-)
-if _agent_spec and _agent_spec.loader:
-    _agent_module = importlib.util.module_from_spec(_agent_spec)
-    _agent_spec.loader.exec_module(_agent_module)
-    agentic_service = _agent_module
+agentic_service = _load_local_service("agentic_service")
 
 # Replace HTTP client functions with direct service calls
 def fetch_json(base_url: str, path: str):
