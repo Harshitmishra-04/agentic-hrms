@@ -56,10 +56,29 @@ DEFAULT_API_URL = "direct"  # Flag to indicate direct function calls
 
 
 def fetch_json(base_url: str, path: str):
-    with _client(base_url) as client:
-        response = client.get(path)
-        response.raise_for_status()
-        return response.json()
+    """Direct function calls instead of HTTP"""
+    # Map API paths to service functions
+    if path == "/dashboard/summary":
+        attr_summary = attrition_service.get_overall_attrition_summary()
+        eng_summary = engagement_service.get_overall_engagement_summary()
+        skills_summary = skill_gap_service.get_org_skill_gaps_summary()
+        avg_skill_gap_count = skill_gap_service.get_org_avg_skill_gap_count()
+        recs_summary = recommendation_service.get_recommendations_summary()
+        return {
+            "attrition": attr_summary,
+            "engagement": eng_summary,
+            "skills": skills_summary,
+            "avg_skill_gap_count": avg_skill_gap_count,
+            "recommendations": recs_summary,
+        }
+    elif path.startswith("/dashboard/attrition-by-department"):
+        return attrition_service.get_attrition_by_department()
+    elif path.startswith("/dashboard/skill-gaps"):
+        limit = int(path.split("=")[1]) if "=" in path else 100
+        return skill_gap_service.get_top_missing_skills(limit=limit)
+    elif path.startswith("/dashboard/recommendations"):
+        return recommendation_service.get_recommendations_summary()
+    return {}
 
 
 def fetch_employee(base_url: str, employee_id: int):
