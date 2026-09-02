@@ -54,6 +54,7 @@ def post_json(base_url: str, path: str, payload: dict):
 
 # No backend startup needed - everything runs in the same process now
 DEFAULT_API_URL = "direct"  # Flag to indicate direct function calls
+APP_RUNTIME_REVISION = "service-fix-2026-09-02"
 
 
 def fetch_json(base_url: str, path: str):
@@ -90,9 +91,18 @@ def fetch_employee(base_url: str, employee_id: int):
 def post_json(base_url: str, path: str, payload: dict):
     """Direct service calls instead of HTTP"""
     if path == "/rag/ask":
-        return rag_service.ask_question(payload.get("query"), payload.get("top_k", 3))
+        ask = getattr(rag_service, "ask_question", None)
+        if ask is None:
+            ask = rag_service.get_rag_service().ask
+        return ask(payload.get("query"), top_k=payload.get("top_k", 3))
     elif path == "/agent/workforce-check":
-        return agentic_service.run_workforce_check(payload.get("employee_id"), payload.get("user_role"))
+        run_check = getattr(agentic_service, "run_workforce_check", None)
+        if run_check is None:
+            raise RuntimeError(
+                "The deployed agentic_service.py is outdated. "
+                "Reboot Streamlit after pulling the latest main revision."
+            )
+        return run_check(payload.get("employee_id"), payload.get("user_role"))
     return {}
 
 def onet_basic_skill_names() -> set[str]:
