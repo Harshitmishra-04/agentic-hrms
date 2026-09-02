@@ -1,0 +1,37 @@
+JOB DESCRIPTION — SAMPLE / PLACEHOLDER (for Phase 6 Recruitment Agent testing)
+
+Title: Machine Learning Engineer
+Department: AI & Data Science
+Location: Bengaluru, India (Hybrid)
+Experience: 2-5 years
+
+About the Role
+We are looking for a Machine Learning Engineer to design, train, and deploy
+predictive models that power our workforce intelligence platform, including
+attrition risk scoring and skill-gap recommendation systems.
+
+Required Skills
+- Python (advanced), pandas, NumPy
+- scikit-learn, XGBoost or LightGBM
+- Model evaluation and explainability (SHAP)
+- SQL and data pipeline basics
+- Experience deploying models via a REST API (FastAPI or Flask)
+- Git version control
+
+Good to Have
+- Experience with vector databases / embeddings (RAG systems)
+- LangChain or LangGraph experience
+- Exposure to MLOps practices (model versioning, drift monitoring)
+- Docker
+
+Responsibilities
+- Build and maintain classification models on structured HR/business data
+- Own the feature engineering to deployment lifecycle for one or more models
+- Collaborate with product and HR stakeholders to translate requirements
+  into measurable ML problems
+- Monitor deployed model performance and support retraining decisions
+
+Qualifications
+- Bachelor's or Master's in Computer Science, Data Science, or related field
+- Strong grasp of classification metrics and when accuracy is misleading
+  (e.g., imbalanced classes)

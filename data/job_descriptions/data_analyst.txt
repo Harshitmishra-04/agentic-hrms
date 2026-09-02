@@ -1,0 +1,37 @@
+JOB DESCRIPTION — SAMPLE / PLACEHOLDER (for Phase 6 Recruitment Agent testing)
+
+Title: Data Analyst
+Department: People Analytics
+Location: Pune, India (Hybrid)
+Experience: 1-3 years
+
+About the Role
+We are looking for a Data Analyst to support workforce reporting — turning
+engagement, performance, and attrition data into dashboards and insights
+that HR and business leaders act on.
+
+Required Skills
+- SQL (intermediate to advanced)
+- Excel (pivot tables, formulas, basic macros)
+- Data visualization tool: Power BI or Tableau
+- Python or R for ad-hoc analysis (pandas preferred)
+- Strong written communication for presenting findings to non-technical
+  stakeholders
+
+Good to Have
+- Experience with HR/people analytics specifically
+- Basic statistics (hypothesis testing, correlation vs causation)
+- Exposure to Streamlit or similar for lightweight internal dashboards
+
+Responsibilities
+- Build and maintain recurring dashboards (attrition, engagement, training
+  completion) for HR leadership
+- Investigate ad-hoc questions from business stakeholders and turn them
+  into clear, defensible analysis
+- Partner with the ML team to validate that model outputs (e.g. attrition
+  risk scores) align with what analysts see in the raw data
+- Maintain data quality checks on core HR tables
+
+Qualifications
+- Bachelor's degree in any quantitative field
+- Comfortable working with messy, real-world HR data

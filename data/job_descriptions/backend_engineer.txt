@@ -1,0 +1,37 @@
+JOB DESCRIPTION — SAMPLE / PLACEHOLDER (for Phase 6 Recruitment Agent testing)
+
+Title: Backend Engineer
+Department: Platform Engineering
+Location: Remote (India)
+Experience: 2-4 years
+
+About the Role
+We are looking for a Backend Engineer to build and harden the API layer
+of our Agentic HRMS platform — the services that serve predictions,
+dashboards, and the agent orchestration layer to the frontend.
+
+Required Skills
+- Python, strong fundamentals in FastAPI or Django
+- REST API design, request validation (Pydantic or similar)
+- SQL databases (PostgreSQL preferred), basic schema design
+- Git, code review workflow
+- Writing and maintaining unit/integration tests (pytest)
+
+Good to Have
+- Experience integrating ML models into production APIs
+- Docker and basic CI/CD
+- Experience with async Python (asyncio, background jobs)
+- Familiarity with vector databases (Chroma, Qdrant, or similar)
+
+Responsibilities
+- Design and maintain FastAPI endpoints for the HRMS platform (attrition
+  prediction, dashboard summaries, employee lookups)
+- Add request validation, logging, and error handling for production
+  reliability
+- Write tests covering core business logic, not just happy paths
+- Work with the ML and Agent teams to expose model/agent outputs safely
+  through governed API endpoints
+
+Qualifications
+- Bachelor's in Computer Science or equivalent practical experience
+- Comfortable owning a service end-to-end, not just writing endpoints

@@ -1,0 +1,14 @@
+{
+    "model_name": "attrition_predictor",
+    "version": "1.0.0",
+    "algorithm": "LogisticRegression (Balanced Weights)",
+    "training_date": "2026-08-28",
+    "roc_auc": 0.8007,
+    "f1_score": 0.5067,
+    "precision": 0.3689,
+    "recall": 0.8085,
+    "decision_threshold": 0.40,
+    "decision_threshold_note": "Must be applied explicitly via predict_proba() >= threshold in any service code, since the sklearn pipeline's own .predict() defaults to 0.5.",
+    "selection_rationale": "Balanced Logistic Regression with a decision threshold of 0.40 was chosen over the Regularized Random Forest alternative (Test Recall 68.09%, Precision 45.07%, F1 54.24%, ROC-AUC 0.7748) because maximizing recall was prioritized to catch more at-risk employees (80.85% vs 68.09%). Additionally, Logistic Regression maintains a higher ROC-AUC (0.8007 vs 0.7748). Regularized Random Forest remains documented as a viable v2 alternative if precision becomes the priority later.",
+    "known_limitation": "~2 of 3 flagged employees are false positives; downstream HR workflow using this model should treat flags as a prompt for review, not an automatic action."
+}
