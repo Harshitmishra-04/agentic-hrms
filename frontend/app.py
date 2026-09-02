@@ -16,15 +16,26 @@ def start_backend():
     import uvicorn
     import sys
     import os
+    import logging
+    
+    # Configure logging for backend startup
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
     
     # Add the project root to the Python path so the backend can be imported
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if project_root not in sys.path:
         sys.path.insert(0, project_root)
     
-    # Import and run the app directly
-    from app.main import app
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
+    try:
+        logger.info(f"Starting FastAPI backend from {project_root}")
+        # Import and run the app directly
+        from app.main import app
+        logger.info("Successfully imported app.main.app")
+        uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
+    except Exception as e:
+        logger.error(f"Failed to start backend: {e}")
+        raise
 
 def ensure_backend_running():
     """Ensure the FastAPI backend is running, starting it if necessary."""
@@ -42,21 +53,23 @@ def ensure_backend_running():
     except:
         pass
     
-    # Start backend in background thread
+    # Start backend in background thread (non-daemon to ensure it completes startup)
     if _backend_thread is None or not _backend_thread.is_alive():
-        _backend_thread = threading.Thread(target=start_backend, daemon=True)
+        _backend_thread = threading.Thread(target=start_backend, daemon=False)
         _backend_thread.start()
         _backend_started = True
 
-def wait_for_api_ready(max_retries=30, retry_interval=1.0):
+def wait_for_api_ready(max_retries=60, retry_interval=2.0):
     """Wait for the API to be ready before proceeding."""
     for attempt in range(max_retries):
         try:
-            response = httpx.get("http://127.0.0.1:8000/", timeout=2.0)
+            response = httpx.get("http://127.0.0.1:8000/", timeout=5.0)
             if response.status_code == 200:
                 return True
-        except:
-            pass
+        except Exception as e:
+            # Log the error for debugging but continue trying
+            if attempt % 10 == 0:  # Log every 10 attempts to avoid spam
+                print(f"Attempt {attempt + 1}/{max_retries}: Backend not ready yet - {e}")
         time.sleep(retry_interval)
     return False
 
@@ -67,8 +80,8 @@ if "backend_started" not in st.session_state:
 
 # Wait for API to be ready before proceeding
 if "api_ready" not in st.session_state:
-    with st.spinner("Starting FastAPI backend..."):
-        if wait_for_api_ready(max_retries=30, retry_interval=1.0):
+    with st.spinner("Starting FastAPI backend... This may take up to 2 minutes."):
+        if wait_for_api_ready(max_retries=60, retry_interval=2.0):
             st.session_state.api_ready = True
         else:
             st.error("Failed to start FastAPI backend. Please check the logs.")
