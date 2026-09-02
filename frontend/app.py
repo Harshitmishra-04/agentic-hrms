@@ -14,7 +14,17 @@ _backend_started = False
 def start_backend():
     """Start the FastAPI backend using uvicorn in a background thread."""
     import uvicorn
-    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, log_level="info")
+    import sys
+    import os
+    
+    # Add the project root to the Python path so the backend can be imported
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    
+    # Import and run the app directly
+    from app.main import app
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
 
 def ensure_backend_running():
     """Ensure the FastAPI backend is running, starting it if necessary."""
