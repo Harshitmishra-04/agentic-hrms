@@ -6,12 +6,34 @@ import streamlit as st
 import plotly.express as px
 
 # Add project root to path for direct imports
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
+# Try multiple path resolution methods for different environments
+possible_roots = [
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),  # Standard: frontend/ -> project root
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..")),  # Alternative
+    os.getcwd(),  # Current working directory
+    "/mount/src/agentic-hrms",  # Streamlit Cloud specific path
+]
+
+for root in possible_roots:
+    if os.path.exists(os.path.join(root, "app")) and os.path.exists(os.path.join(root, "data")):
+        if root not in sys.path:
+            sys.path.insert(0, root)
+        project_root = root
+        break
+else:
+    # Fallback: use the directory containing frontend
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
 
 # Direct imports instead of HTTP calls
-from app.services import attrition_service, engagement_service, recommendation_service, skill_gap_service, rag_service, agentic_service
+try:
+    from app.services import attrition_service, engagement_service, recommendation_service, skill_gap_service, rag_service, agentic_service
+except ImportError as e:
+    st.error(f"Failed to import backend services: {e}")
+    st.error(f"Project root: {project_root}")
+    st.error(f"Python path: {sys.path[:3]}")
+    st.stop()
 
 # Replace HTTP client functions with direct service calls
 def fetch_json(base_url: str, path: str):
