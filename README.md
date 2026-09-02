@@ -55,9 +55,6 @@ enterprise_hr_ai/
 ├── .gitignore                    # Git ignore rules
 ├── requirements.txt              # Python dependencies
 ├── pytest.ini                    # Pytest configuration
-├── 01_PROJECT_ROADMAP.md         # Project roadmap and architecture decisions
-├── 02_PROMPT_WORKBOOK.md         # Step-by-step build prompts
-└── PROJECT_STATE.md              # Current project state and decisions log
 ```
 
 ## Getting Started
