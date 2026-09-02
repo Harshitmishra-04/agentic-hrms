@@ -59,9 +59,8 @@ __pycache__/
 .Python
 
 # Data files (keep structure, ignore content for large files)
-data/chroma_db/
+# Note: For Streamlit Cloud deployment, chroma_db and processed data are committed
 data/raw/**/*.csv
-data/processed/**/*.csv
 data/predictions/*.csv
 *.db
 *.sqlite
@@ -81,8 +80,8 @@ logs/
 Thumbs.db
 
 # Large binary files
+# Note: For Streamlit Cloud deployment, model .joblib files are committed
 *.pkl
-*.joblib
 *.h5
 *.model
 

@@ -9,7 +9,6 @@ fastapi
 uvicorn
 pydantic
 streamlit
-pytest
 sentence-transformers
 chromadb
 pypdf

@@ -1,0 +1,389 @@
+skill,missing_count,severity,avg_importance_score
+Science,689,HIGH,2.556284470246734
+Critical Thinking,689,HIGH,3.80899854862119
+Active Listening,684,HIGH,3.936315789473684
+Mathematics,679,HIGH,2.9739322533136967
+Monitoring,676,HIGH,3.349378698224852
+Learning Strategies,669,HIGH,3.081704035874439
+Speaking,667,HIGH,3.8752623688155925
+Microsoft Word,665,HIGH,4.0
+Active Learning,663,HIGH,3.551025641025641
+Writing,661,HIGH,3.6022692889561267
+Reading Comprehension,658,HIGH,3.911306990881459
+Microsoft Excel,651,HIGH,5.0
+Microsoft PowerPoint,645,HIGH,4.463565891472868
+Microsoft Office software,625,HIGH,5.0
+Microsoft Outlook,512,HIGH,4.2734375
+Microsoft Project,485,HIGH,4.0
+Microsoft Dynamics,464,HIGH,3.0
+Database software,464,HIGH,3.0
+IBM Notes,449,HIGH,3.0
+SAP software,421,HIGH,4.144893111638955
+Microsoft Exchange,405,HIGH,3.0
+FileMaker Pro,384,HIGH,3.0
+R,350,HIGH,4.345714285714286
+Minitab,341,HIGH,3.0
+Web browser software,333,HIGH,3.0
+SAP Business Objects,331,HIGH,3.0
+Microsoft Access,325,HIGH,4.0
+Adobe Photoshop,302,HIGH,4.0
+UNIX,301,HIGH,4.0
+Oracle PeopleSoft,296,HIGH,4.0
+Python,285,HIGH,4.533333333333333
+Linux,283,HIGH,4.0
+IBM SPSS Statistics,272,HIGH,4.0
+Salesforce software,262,HIGH,4.732824427480916
+National Instruments LabVIEW,262,HIGH,3.0
+Autodesk AutoCAD,261,HIGH,4.0
+Microsoft SharePoint,259,HIGH,4.0
+Oracle Database,253,HIGH,4.0
+Google Docs,250,HIGH,4.0
+Microsoft Visio,247,HIGH,4.0
+StataCorp Stata,235,HIGH,3.0
+SAS,229,HIGH,4.0
+Structured query language SQL,229,HIGH,4.0
+Oracle Solaris,228,HIGH,3.0
+Citrix cloud computing software,224,HIGH,3.0
+Microsoft SQL Server,222,HIGH,4.0
+MicroStrategy,218,HIGH,3.0
+LexisNexis,218,HIGH,3.0
+Microsoft Publisher,213,HIGH,3.0
+Scheduling software,209,HIGH,3.0
+Teradata Database,209,HIGH,4.0
+Microsoft Visual Basic,207,HIGH,4.0
+The MathWorks MATLAB,205,HIGH,4.0
+Extensible markup language XML,203,HIGH,4.0
+IBM Cognos Impromptu,203,HIGH,3.0
+Apache Hadoop,202,HIGH,4.0
+IBM Domino,202,HIGH,3.0
+NortonLifeLock cybersecurity software,198,HIGH,3.0
+Email software,196,HIGH,3.0
+McAfee,194,HIGH,3.0
+MEDITECH software,193,HIGH,4.0
+Amazon Web Services AWS software,191,HIGH,4.7643979057591626
+Splunk Enterprise,191,HIGH,4.0
+Atlassian JIRA,184,HIGH,4.0
+Graphics software,184,HIGH,3.0
+ESRI ArcGIS software,184,HIGH,4.0
+Electronic medical record EMR software,181,HIGH,3.0
+Enterprise application integration EAI software,179,HIGH,3.0
+Adobe Acrobat,179,HIGH,4.0
+Enterprise JavaBeans,177,HIGH,3.0
+Wireshark,174,HIGH,3.0
+Shell script,172,HIGH,4.0
+Data entry software,170,HIGH,3.0
+C,166,HIGH,4.0
+Google Workspace software,164,HIGH,4.0
+Microsoft Azure software,164,HIGH,5.0
+Integrated development environment IDE software,163,HIGH,3.0
+Apple iOS,163,HIGH,4.0
+RESTful API,161,HIGH,3.0
+Platform as a service PaaS,159,HIGH,3.0
+Extensible hypertext markup language XHTML,159,HIGH,3.0
+Ab Initio,158,HIGH,3.0
+Apache Cassandra,158,HIGH,4.0
+IBM Cognos Business Intelligence,158,HIGH,3.0
+Dassault Systemes SolidWorks,157,HIGH,4.0
+Google Cloud software,156,HIGH,3.0
+SAP Business One,156,HIGH,3.0
+Docker,156,HIGH,4.0
+IBM DB2,154,HIGH,4.0
+Oracle Java,154,HIGH,4.0
+SAP BusinessObjects Crystal Reports,154,HIGH,3.0
+Microsoft Windows Server,154,HIGH,4.0
+Database management software,154,HIGH,3.0
+Cisco Systems VPN Client,153,HIGH,3.0
+JavaScript,153,HIGH,4.0
+SAP Adaptive Server Enterprise,153,HIGH,3.0
+Virtual private networking VPN software,153,HIGH,3.0
+Border Gateway Protocol BGP,152,HIGH,4.0
+Network directory services software,152,HIGH,3.0
+Microsoft Office Live Meeting,152,HIGH,3.0
+Microsoft Active Directory,151,HIGH,4.0
+PHP,151,HIGH,4.0
+MapReduce big data software,150,HIGH,3.0
+Cisco Systems CiscoWorks,149,HIGH,3.0
+Sales analysis software,149,HIGH,3.0
+Ansible software,149,HIGH,4.0
+Voice over internet protocol VoIP system software,147,HIGH,3.0
+Firewall software,147,HIGH,3.0
+C++,146,HIGH,4.0
+Oracle JD Edwards EnterpriseOne,146,HIGH,3.0
+Informatica Corporation PowerCenter,146,HIGH,3.0
+Perl,145,HIGH,4.0
+Kubernetes,144,HIGH,4.0
+Software as a service SaaS,144,HIGH,3.0
+Security assertion markup language SAML,143,HIGH,3.0
+Waters MassLynx,143,HIGH,3.0
+MicroStrategy Desktop,143,HIGH,3.0
+Apache Struts,142,HIGH,3.0
+Intuit QuickBooks,142,HIGH,4.0
+Microsoft Teams,142,HIGH,4.0
+Single sign-on SSO,142,HIGH,3.0
+WebEx Sales Center,142,HIGH,3.0
+Hewlett Packard HP-UX,141,HIGH,3.0
+NetSuite ERP,141,HIGH,3.0
+YouTube,141,HIGH,3.0
+Apache HBase,141,HIGH,3.0
+Ruby,140,HIGH,4.0
+React,137,HIGH,4.0
+BioArray Software Environment BASE,137,HIGH,3.0
+Hyperion Solutions Hyperion System 9 Bi+,136,HIGH,3.0
+Waters Millennium32,136,HIGH,3.0
+Apple Final Cut Pro,134,HIGH,3.0
+Triple G ULTRA Laboratory Information System,134,HIGH,3.0
+Microsoft Windows,134,HIGH,4.0
+Test result delivery software,131,HIGH,3.0
+Thermo ToxLab,131,HIGH,3.0
+PerkinElmer TurboMass,130,HIGH,3.0
+Waters Empower 2,130,HIGH,3.0
+Statistical software,129,HIGH,3.0
+Medical Scientists HybridAI,128,HIGH,3.0
+Commercial plate reader software,128,HIGH,3.0
+Apache Pig,127,HIGH,3.0
+Qlik Tech QlikView,127,HIGH,3.0
+Management information systems MIS,127,HIGH,3.0
+Medical system integration software,126,HIGH,3.0
+Specimen tracking software,125,HIGH,3.0
+Sunquest Information Systems Sunquest Laboratory,125,HIGH,3.0
+Medical Scientists MediSave,124,HIGH,3.0
+Waters Q-DIS/QM LIMS,122,HIGH,3.0
+Quality control software,121,HIGH,3.0
+Billing software,119,HIGH,3.0
+Medical digital imaging software,119,HIGH,3.0
+Quizlet,119,HIGH,3.0
+Microscopic image capturing software,118,HIGH,3.0
+Hematology laboratory workflow management software,115,HIGH,3.0
+Eko,112,HIGH,3.0
+Laboratory information system LIS,109,HIGH,3.0
+Test routing software,108,HIGH,3.0
+Supervisory control and data acquisition SCADA software,104,HIGH,3.0
+Reimbursement screening software,99,MEDIUM,3.0
+Medical condition coding software,99,MEDIUM,3.0
+JamBoard,98,MEDIUM,3.0
+Apple macOS,94,MEDIUM,4.0
+Adobe InDesign,90,MEDIUM,4.0
+HubSpot software,87,MEDIUM,4.0
+FaceTime,81,MEDIUM,3.0
+Computer integrated manufacturing CIM software,78,MEDIUM,3.0
+Google Slides,77,MEDIUM,3.0
+IBM InfoSphere DataStage,77,MEDIUM,3.0
+SAP Crystal Reports,77,MEDIUM,3.0
+Blackbaud The Raiser's Edge,76,MEDIUM,3.0
+Microsoft Dynamics GP,76,MEDIUM,3.0
+Oracle Eloqua,76,MEDIUM,3.0
+Landtec System Software LFG Pro,75,MEDIUM,3.0
+Marketo Marketing Automation,75,MEDIUM,4.0
+ProcessPro Premier,73,MEDIUM,3.0
+Social media sites,73,MEDIUM,3.0
+Evernote,73,MEDIUM,3.0
+Exact Software JobBOSS,72,MEDIUM,3.0
+Google Ads,72,MEDIUM,3.0
+PTC Creo Parametric,71,MEDIUM,3.0
+Sage 50 Accounting,71,MEDIUM,3.0
+Kronos Workforce Timekeeper,70,MEDIUM,4.0
+Adobe Creative Cloud software,70,MEDIUM,4.0
+Tax software,70,MEDIUM,3.0
+WorkSchedule.net,69,MEDIUM,3.0
+Microsoft Visual Basic for Applications VBA,69,MEDIUM,4.0
+ABB Optimize IT Predict & Control,68,MEDIUM,3.0
+Landfill gas analysis software,68,MEDIUM,3.0
+Facebook,68,MEDIUM,4.0
+Tableau,68,MEDIUM,4.0
+ADP Workforce Now,68,MEDIUM,3.0
+Oracle PeopleSoft Financials,67,MEDIUM,3.0
+Oracle Taleo,67,MEDIUM,3.0
+Financial planning software,66,MEDIUM,3.0
+Scadex Technologies MAESTRO,66,MEDIUM,3.0
+LinkedIn,66,MEDIUM,3.0
+Peminic Patient Safety & Quality Suite,66,MEDIUM,3.0
+Adobe After Effects,66,MEDIUM,4.0
+Computer integrated manufacturing CIM warehouse shipping manager software,65,MEDIUM,3.0
+Microsoft Internet Explorer,65,MEDIUM,3.0
+Human resource management software HRMS,65,MEDIUM,3.0
+Schneider Electric CitectSCADA,64,MEDIUM,3.0
+"Admissions, discharge, and transfer ADT software",64,MEDIUM,3.0
+Citect IIM,64,MEDIUM,3.0
+Prosys Open Platform Communications unified architecture software,64,MEDIUM,3.0
+Google Analytics,64,MEDIUM,4.0
+Epic EpicCare Inpatient Clinical System,64,MEDIUM,3.0
+CitectSCADA Reports,63,MEDIUM,3.0
+Clockware,63,MEDIUM,3.0
+QUMAS quality management solution software,63,MEDIUM,3.0
+Healthcare common procedure coding system HCPCS,63,MEDIUM,3.0
+AVEVA InTouch HMI,63,MEDIUM,3.0
+Blackboard software,63,MEDIUM,3.0
+Epic Systems software,63,MEDIUM,3.0
+Employee performance management system,63,MEDIUM,3.0
+Computer integrated manufacturing CIM time manager software,62,MEDIUM,3.0
+Distributed control system DCS,62,MEDIUM,3.0
+Plant management software,62,MEDIUM,3.0
+Airtable,62,MEDIUM,3.0
+Kronos Workforce Payroll,62,MEDIUM,3.0
+Oracle Fusion Applications,62,MEDIUM,3.0
+Slack,62,MEDIUM,4.0
+PracticeWorks Systems Kodak WINOMS CS,62,MEDIUM,3.0
+Statistical process control SPC software,61,MEDIUM,3.0
+Oracle Business Intelligence Enterprise Edition,61,MEDIUM,3.0
+Oracle Hyperion,61,MEDIUM,3.0
+Oracle Primavera Enterprise Project Portfolio Management,61,MEDIUM,4.0
+WorkTech MAXIMO,61,MEDIUM,3.0
+IBM Power Systems software,60,MEDIUM,3.0
+Mozilla Thunderbird,60,MEDIUM,3.0
+Pemimic Patient Relations Suite,60,MEDIUM,3.0
+eClinicalWorks EHR software,59,MEDIUM,4.0
+Industrial production manager and stock control software,59,MEDIUM,3.0
+Marel production system MPS,59,MEDIUM,3.0
+Oracle E-Business Suite Financials,59,MEDIUM,3.0
+Manhattan Cross Cultural Group Quality Interactions,59,MEDIUM,3.0
+Henry Schein Dentrix,58,MEDIUM,4.0
+Prognosis Solutions ResolvPRM,58,MEDIUM,3.0
+Customer Expressions i-Sight,58,MEDIUM,3.0
+Computerized maintenance management system CMMS,57,MEDIUM,3.0
+IBM Rational ClearQuest,57,MEDIUM,3.0
+Employee scheduling software,57,MEDIUM,3.0
+Google Drive,55,MEDIUM,3.0
+rL Solutions Feedback MonitorPro,54,MEDIUM,3.0
+Corel WordPerfect Office Suite,53,MEDIUM,3.0
+CareOne CareEnsure,53,MEDIUM,3.0
+Job control language JCL,53,MEDIUM,3.0
+ActionWare,52,MEDIUM,3.0
+AMG Teleran SalesInSync,52,MEDIUM,3.0
+Datawatch Monarch,52,MEDIUM,3.0
+Yardi software,52,MEDIUM,4.0
+Epic Systems,51,MEDIUM,5.0
+Patient satisfaction assessment software,51,MEDIUM,3.0
+Screencastify,51,MEDIUM,3.0
+Sage MAS 500,51,MEDIUM,3.0
+Savant MobileRanger,51,MEDIUM,3.0
+LSA Visual Easy Lean,51,MEDIUM,3.0
+Flipgrid,50,MEDIUM,3.0
+Software on Sailboats Desktop Sales Manager,50,MEDIUM,3.0
+NetSuite NetCRM,49,LOW,3.0
+Medical procedure coding software,48,LOW,3.0
+HEAT Software GoldMine,48,LOW,3.0
+Personnel scheduling software,48,LOW,3.0
+Microsoft OneNote,48,LOW,3.0
+Sugar CRM,48,LOW,3.0
+Customer information control system CICS,47,LOW,3.0
+Nagios,47,LOW,3.0
+Quest Erwin Data Modeler,46,LOW,3.0
+vtiger CRM,46,LOW,3.0
+Complaint management software,45,LOW,3.0
+Laboratory information management system LIMS,45,LOW,3.0
+Deacom ERP,45,LOW,3.0
+Veritas NetBackup,45,LOW,3.0
+Vanguard Software Vanguard Sales Manager,45,LOW,3.0
+Dynamic Energy Systems MedAct,45,LOW,3.0
+Avidian Technologies Prophet,44,LOW,3.0
+Delphi Technology,44,LOW,3.0
+Microsoft FrontPage,44,LOW,3.0
+Salesforce.com Salesforce CRM,44,LOW,3.0
+Dropbox,44,LOW,3.0
+Fund accounting software,43,LOW,3.0
+GroupMe,43,LOW,3.0
+InnQuest Software roomMaster,43,LOW,3.0
+Payroll software,43,LOW,3.0
+IBM Lotus 1-2-3,42,LOW,3.0
+Puppet,42,LOW,4.0
+PostgreSQL,42,LOW,4.0
+STATISTICA,42,LOW,3.0
+SeaMonkey,42,LOW,3.0
+Geographic information system GIS software,41,LOW,3.0
+Atlassian Confluence,41,LOW,4.0
+CNC Mastercam,41,LOW,3.0
+Siemens NX,41,LOW,3.0
+Act!,40,LOW,3.0
+Maximizer Software Maximizer Enterprise,39,LOW,3.0
+Mozilla Firefox,38,LOW,4.0
+Apple Keynote,36,LOW,3.0
+Realization Streamliner,34,LOW,3.0
+Clinical trial management software,31,LOW,3.0
+Adobe Human Capital Application Solution Accelerator,31,LOW,3.0
+Technomedia Hodes iQ,31,LOW,3.0
+Online databases,30,LOW,3.0
+Staffing Solutions Enterprises Staff Matrix,30,LOW,3.0
+Assessment software,30,LOW,3.0
+Loom,30,LOW,3.0
+Recruit Wizard,29,LOW,3.0
+HireAbility ResumeParser,29,LOW,3.0
+Recruitpoint.net,29,LOW,3.0
+Bond International Adapt Staffing,28,LOW,3.0
+CVTracer,28,LOW,3.0
+eQuest,28,LOW,3.0
+GitHub,28,LOW,4.0
+Zoom,28,LOW,4.0
+Safari Software Products Safari,28,LOW,3.0
+Human resource information system (HRIS),28,LOW,3.0
+Industrial Code Recruitpoint.net,28,LOW,3.0
+Data Frenzy,27,LOW,3.0
+GoBackgrounds,27,LOW,3.0
+ResumeRobot,27,LOW,3.0
+Hypertext markup language HTML,27,LOW,4.0
+Job posting software,27,LOW,3.0
+Adobe Illustrator,26,LOW,4.0
+Cluen executive recruitment software,26,LOW,3.0
+Oracle HRIS,26,LOW,4.0
+Candidate tracking software,26,LOW,3.0
+Intelius,26,LOW,3.0
+Microsoft SQL Server Reporting Services SSRS,26,LOW,4.0
+Post Once,26,LOW,3.0
+Adobe Dreamweaver,26,LOW,3.0
+PowerPlace Professional,26,LOW,3.0
+Intelligent Algorithms InfoGIST Platinum Recruiter,26,LOW,3.0
+BrightMove Applicant Tracking System,25,LOW,3.0
+RecruitTrack,25,LOW,3.0
+Talent Technology HireDesk,25,LOW,3.0
+Ellucian Banner Human Resources,25,LOW,3.0
+Lawson Human Resource Management,25,LOW,3.0
+StaffingSoft Staffing Edition,25,LOW,3.0
+MPAY Millennium,25,LOW,3.0
+Main Sequence Technologies PCRecruiter,25,LOW,3.0
+PostingPal,24,LOW,3.0
+HireLogic PowerPlace,24,LOW,3.0
+HRM Direct,24,LOW,3.0
+Background checking software,24,LOW,3.0
+Blackdog,24,LOW,3.0
+Advanced business application programming ABAP,23,LOW,3.0
+AST Staff Matrix,23,LOW,3.0
+Cisco Webex,23,LOW,4.0
+Oracle PeopleSoft Human Capital Management,23,LOW,3.0
+Resource Edge TalentHook Sphere,23,LOW,3.0
+Recruitment management software,23,LOW,3.0
+TempWorks recruiting and staffing software,23,LOW,3.0
+VCG Pointwing,23,LOW,3.0
+Arbita OnePost,23,LOW,3.0
+ICIMS,23,LOW,3.0
+Workday software,23,LOW,5.0
+Adobe LifeCycle Enterprise Suite,22,LOW,3.0
+Kronos Workforce HR,22,LOW,3.0
+Google,22,LOW,3.0
+Micro J Systems PcHunter,22,LOW,3.0
+Applicant tracking software,22,LOW,4.0
+Drupal,22,LOW,3.0
+Silk Road technology OpenHire,22,LOW,3.0
+Talent Technology Talemetry,22,LOW,3.0
+Vendor management system software,22,LOW,3.0
+Talent Technology Resume Mirror,21,LOW,3.0
+Bullhorn Applicant Tracking System,21,LOW,3.0
+TalentHook,21,LOW,3.0
+Sendouts Recruiting,21,LOW,3.0
+Bond International Software Bond StaffSuite,21,LOW,3.0
+ApplicantPro iApplicants,20,LOW,3.0
+Candidate screening software,20,LOW,3.0
+Google Meet,20,LOW,3.0
+Skype,20,LOW,3.0
+Oracle WebLogic Server,20,LOW,3.0
+Resume processing software,20,LOW,3.0
+BlackDog Recruiting,20,LOW,3.0
+Careerbuilder.com,19,LOW,3.0
+Resume converter software,19,LOW,3.0
+Arbita OneWorld,18,LOW,3.0
+Resume extraction and search software,18,LOW,3.0
+COATSsql,18,LOW,3.0
+Main Sequence Technologies PCRecruiter Resume Inhaler,18,LOW,3.0
+Perforce Helix software,18,LOW,3.0
+SAP ERP Human Capital Management,18,LOW,3.0
+Cluen Encore,18,LOW,3.0
+SmugMug Flickr,17,LOW,3.0
+DGCC.com RecruitTrack,14,LOW,3.0

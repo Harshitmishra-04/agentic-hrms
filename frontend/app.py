@@ -1,9 +1,68 @@
 import os
-
+import threading
+import time
 import httpx
+
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+
+# Start FastAPI backend in background thread if not already running
+_backend_thread = None
+_backend_started = False
+
+def start_backend():
+    """Start the FastAPI backend using uvicorn in a background thread."""
+    import uvicorn
+    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, log_level="info")
+
+def ensure_backend_running():
+    """Ensure the FastAPI backend is running, starting it if necessary."""
+    global _backend_thread, _backend_started
+    
+    if _backend_started:
+        return
+    
+    # Check if backend is already responding
+    try:
+        response = httpx.get("http://127.0.0.1:8000/", timeout=2.0)
+        if response.status_code == 200:
+            _backend_started = True
+            return
+    except:
+        pass
+    
+    # Start backend in background thread
+    if _backend_thread is None or not _backend_thread.is_alive():
+        _backend_thread = threading.Thread(target=start_backend, daemon=True)
+        _backend_thread.start()
+        _backend_started = True
+
+def wait_for_api_ready(max_retries=30, retry_interval=1.0):
+    """Wait for the API to be ready before proceeding."""
+    for attempt in range(max_retries):
+        try:
+            response = httpx.get("http://127.0.0.1:8000/", timeout=2.0)
+            if response.status_code == 200:
+                return True
+        except:
+            pass
+        time.sleep(retry_interval)
+    return False
+
+# Start backend on first script run
+if "backend_started" not in st.session_state:
+    ensure_backend_running()
+    st.session_state.backend_started = True
+
+# Wait for API to be ready before proceeding
+if "api_ready" not in st.session_state:
+    with st.spinner("Starting FastAPI backend..."):
+        if wait_for_api_ready(max_retries=30, retry_interval=1.0):
+            st.session_state.api_ready = True
+        else:
+            st.error("Failed to start FastAPI backend. Please check the logs.")
+            st.stop()
 
 DEFAULT_API_URL = os.getenv("HRMS_API_URL", "http://127.0.0.1:8000")
 
