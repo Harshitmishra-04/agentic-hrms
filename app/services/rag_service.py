@@ -1,5 +1,6 @@
 import os
 import chromadb
+from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer, CrossEncoder
 from rank_bm25 import BM25Okapi
 import re
@@ -9,7 +10,9 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 # Configuration
-CHROMA_DIR = os.path.join("data", "chroma_db")
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+CHROMA_DIR = os.path.join(PROJECT_ROOT, "data", "chroma_db")
+POLICIES_DIR = os.path.join(PROJECT_ROOT, "data", "hr_policies")
 COLLECTION_NAME = "hr_policies"
 
 class RAGService:
@@ -34,7 +37,9 @@ class RAGService:
         print(f"Connecting to ChromaDB at {CHROMA_DIR}...")
         chroma_start = time.time()
         self.chroma_client = chromadb.PersistentClient(path=CHROMA_DIR)
-        self.collection = self.chroma_client.get_collection(name=COLLECTION_NAME)
+        self.collection = self.chroma_client.get_or_create_collection(name=COLLECTION_NAME)
+        if self.collection.count() == 0:
+            self._index_policy_pdfs()
         chroma_time = time.time() - chroma_start
         print(f"  ✓ ChromaDB connected in {chroma_time:.2f}s")
         
@@ -82,6 +87,34 @@ class RAGService:
         self.bm25 = BM25Okapi(self.tokenized_docs)
         
         print(f"Loaded {len(self.documents)} documents for BM25")
+
+    def _index_policy_pdfs(self):
+        """Build the policy collection on a fresh deployment if it is absent/empty."""
+        documents = []
+        metadatas = []
+        ids = []
+        for filename in sorted(os.listdir(POLICIES_DIR)) if os.path.isdir(POLICIES_DIR) else []:
+            if not filename.lower().endswith(".pdf"):
+                continue
+            path = os.path.join(POLICIES_DIR, filename)
+            reader = PdfReader(path)
+            text = "\n".join(page.extract_text() or "" for page in reader.pages).strip()
+            if text:
+                documents.append(text)
+                metadatas.append({"source": filename})
+                ids.append(os.path.splitext(filename)[0])
+
+        if not documents:
+            raise RuntimeError(f"No readable HR policy PDFs found in {POLICIES_DIR}")
+
+        embeddings = self.embedding_model.encode(documents).tolist()
+        self.collection.add(
+            ids=ids,
+            documents=documents,
+            metadatas=metadatas,
+            embeddings=embeddings,
+        )
+        print(f"Indexed {len(documents)} HR policy documents into ChromaDB")
     
     def _tokenize(self, text: str) -> List[str]:
         """Simple tokenization for BM25."""
