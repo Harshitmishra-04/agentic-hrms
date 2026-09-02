@@ -285,6 +285,17 @@ with tab1:
         dept_rows = fetch_json(DEFAULT_API_URL, "/dashboard/attrition-by-department")
         skill_payload = fetch_json(DEFAULT_API_URL, "/dashboard/skill-gaps?limit=100")
         recs_payload = fetch_json(DEFAULT_API_URL, "/dashboard/recommendations")
+        
+        # Ensure data types are correct
+        if not isinstance(summary, dict):
+            summary = {}
+        if not isinstance(dept_rows, list):
+            dept_rows = []
+        if not isinstance(skill_payload, list):
+            skill_payload = []
+        if not isinstance(recs_payload, dict):
+            recs_payload = {}
+            
     except Exception as exc:
         st.error(
             f"Error loading dashboard data: {exc}"
@@ -437,7 +448,7 @@ with tab1:
                     st.dataframe(org_gap_df, hide_index=True, width="stretch")
 
             # Preserve the legacy top-skill summary as a secondary detail if available.
-            top_skills = skill_payload.get("top_missing_skills") or []
+            top_skills = skill_payload if isinstance(skill_payload, list) else []
             if top_skills:
                 st.caption("Legacy top missing-skill summary (for reference only):")
                 legacy_df = pd.DataFrame(top_skills)[["skill", "missing_count", "avg_importance_score", "severity"]]
@@ -447,8 +458,15 @@ with tab1:
     with st.container():
         st.subheader("Course recommendation catalog")
         st.caption("times_recommended = number of employees this course was suggested to (not completions).")
-        catalog = recs_payload.get("catalog") or []
-        distribution = (recs_payload.get("summary") or {}).get("course_distribution") or {}
+        
+        # Handle different response structures
+        if isinstance(recs_payload, dict):
+            catalog = recs_payload.get("catalog") or []
+            distribution = (recs_payload.get("summary") or {}).get("course_distribution") or {}
+        else:
+            catalog = []
+            distribution = {}
+            
         if catalog:
             recs_df = pd.DataFrame(catalog)
             recs_df["times_recommended"] = recs_df["course_title"].map(distribution).fillna(0).astype(int)

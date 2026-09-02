@@ -33,9 +33,14 @@ def get_recommendations_summary() -> dict:
     df = pd.read_csv(RECS_LONG_PATH)
     course_counts = df["recommended_course"].value_counts().to_dict()
     
+    catalog = get_course_catalog()
+    
     return {
         "total_recommendations": int(df.shape[0]),
-        "course_distribution": course_counts
+        "catalog": catalog,
+        "summary": {
+            "course_distribution": course_counts
+        }
     }
 
 def get_employee_recommendations(employee_id: int) -> dict:
