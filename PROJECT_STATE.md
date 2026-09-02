@@ -8,13 +8,14 @@ This project has been adapted to run as a single Streamlit Community Cloud app (
 
 #### 1. Backend Startup in Streamlit
 - **File**: `frontend/app.py`
-- **Changes**: Added code at the top of the file to start the FastAPI backend in a background Python thread
+- **Changes**: Added code at the top of the file to start the FastAPI backend in a background subprocess
 - **Implementation**: 
-  - Uses Python's `threading` module to start uvicorn as a daemon thread
+  - Uses Python's `subprocess` module to start uvicorn as a separate process
   - Uses `st.session_state` to ensure the backend starts only once per session
   - The backend listens on `http://127.0.0.1:8000`
   - Added a runtime check/wait mechanism (`wait_for_api_ready`) to ensure the API is ready before Streamlit attempts to call it
-  - **Fixed import issue**: Directly imports `app.main.app` instead of using string import path to avoid module resolution conflicts
+  - **Changed from threading to subprocess**: The threading approach didn't work in Streamlit Cloud environment; subprocess is more reliable for background services
+  - Added cleanup function to properly terminate the backend process on exit
 
 #### 2. API Base URL Configuration
 - **File**: `frontend/app.py`

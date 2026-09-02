@@ -1,45 +1,45 @@
 import os
-import threading
+import subprocess
 import time
 import httpx
+import signal
 
 import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-# Start FastAPI backend in background thread if not already running
-_backend_thread = None
+# Start FastAPI backend in background process if not already running
+_backend_process = None
 _backend_started = False
 
 def start_backend():
-    """Start the FastAPI backend using uvicorn in a background thread."""
-    import uvicorn
+    """Start the FastAPI backend using uvicorn in a background subprocess."""
     import sys
-    import os
-    import logging
-    
-    # Configure logging for backend startup
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
     
     # Add the project root to the Python path so the backend can be imported
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    if project_root not in sys.path:
-        sys.path.insert(0, project_root)
     
     try:
-        logger.info(f"Starting FastAPI backend from {project_root}")
-        # Import and run the app directly
-        from app.main import app
-        logger.info("Successfully imported app.main.app")
-        uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
+        # Start uvicorn as a subprocess
+        cmd = [sys.executable, "-m", "uvicorn", "app.main:app", 
+               "--host", "127.0.0.1", "--port", "8000", "--log-level", "info"]
+        
+        process = subprocess.Popen(
+            cmd,
+            cwd=project_root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        
+        return process
     except Exception as e:
-        logger.error(f"Failed to start backend: {e}")
-        raise
+        print(f"Failed to start backend subprocess: {e}")
+        return None
 
 def ensure_backend_running():
     """Ensure the FastAPI backend is running, starting it if necessary."""
-    global _backend_thread, _backend_started
+    global _backend_process, _backend_started
     
     if _backend_started:
         return
@@ -53,11 +53,14 @@ def ensure_backend_running():
     except:
         pass
     
-    # Start backend in background thread (non-daemon to ensure it completes startup)
-    if _backend_thread is None or not _backend_thread.is_alive():
-        _backend_thread = threading.Thread(target=start_backend, daemon=False)
-        _backend_thread.start()
-        _backend_started = True
+    # Start backend in background subprocess
+    if _backend_process is None or _backend_process.poll() is not None:
+        _backend_process = start_backend()
+        if _backend_process:
+            _backend_started = True
+            print(f"Started backend process with PID: {_backend_process.pid}")
+        else:
+            print("Failed to start backend process")
 
 def wait_for_api_ready(max_retries=60, retry_interval=2.0):
     """Wait for the API to be ready before proceeding."""
@@ -78,6 +81,23 @@ if "backend_started" not in st.session_state:
     ensure_backend_running()
     st.session_state.backend_started = True
 
+# Cleanup function to kill backend process on exit
+def cleanup_backend():
+    global _backend_process
+    if _backend_process and _backend_process.poll() is None:
+        try:
+            _backend_process.terminate()
+            _backend_process.wait(timeout=5)
+        except:
+            try:
+                _backend_process.kill()
+            except:
+                pass
+
+# Register cleanup
+import atexit
+atexit.register(cleanup_backend)
+
 # Wait for API to be ready before proceeding
 if "api_ready" not in st.session_state:
     with st.spinner("Starting FastAPI backend... This may take up to 2 minutes."):
@@ -85,6 +105,8 @@ if "api_ready" not in st.session_state:
             st.session_state.api_ready = True
         else:
             st.error("Failed to start FastAPI backend. Please check the logs.")
+            # Cleanup the failed process
+            cleanup_backend()
             st.stop()
 
 DEFAULT_API_URL = os.getenv("HRMS_API_URL", "http://127.0.0.1:8000")
