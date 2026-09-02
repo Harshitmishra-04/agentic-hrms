@@ -1,9 +1,11 @@
 import os
 import pandas as pd
 
-COURSES_PATH = os.path.join("data", "processed", "courses.csv")
-RECS_PIVOTED_PATH = os.path.join("data", "processed", "employee_recommendations_pivoted_v3.csv")
-RECS_LONG_PATH = os.path.join("data", "processed", "employee_course_recommendations_v3.csv")
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+DATA_PROCESSED = os.path.join(PROJECT_ROOT, "data", "processed")
+COURSES_PATH = os.path.join(DATA_PROCESSED, "courses.csv")
+RECS_PIVOTED_PATH = os.path.join(DATA_PROCESSED, "employee_recommendations_pivoted_v3.csv")
+RECS_LONG_PATH = os.path.join(DATA_PROCESSED, "employee_course_recommendations_v3.csv")
 
 def get_course_catalog() -> list:
     """
@@ -27,13 +29,16 @@ def get_recommendations_summary() -> dict:
     """
     Returns counts and distributions of course recommendations.
     """
+    catalog = get_course_catalog()
     if not os.path.exists(RECS_LONG_PATH):
-        return {}
-        
+        return {
+            "total_recommendations": 0,
+            "catalog": catalog,
+            "summary": {"course_distribution": {}},
+        }
+
     df = pd.read_csv(RECS_LONG_PATH)
     course_counts = df["recommended_course"].value_counts().to_dict()
-    
-    catalog = get_course_catalog()
     
     return {
         "total_recommendations": int(df.shape[0]),

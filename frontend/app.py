@@ -7,8 +7,9 @@ import plotly.express as px
 
 # Add project root to path for direct imports
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
+# Put this checkout first so a similarly named installed package cannot win.
+sys.path[:] = [entry for entry in sys.path if os.path.abspath(entry or os.curdir) != project_root]
+sys.path.insert(0, project_root)
 
 # Direct imports instead of HTTP calls
 from app.services import attrition_service, engagement_service, recommendation_service, skill_gap_service, rag_service, agentic_service
